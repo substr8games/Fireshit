@@ -1,0 +1,2109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Fireshit Reference Matrix</title>
+<style>
+:root {
+  --bg:#070a0d;
+  --bg-soft:#0b1015;
+  --panel:#0f161d;
+  --panel-2:#131d26;
+  --panel-3:#091016;
+  --line:#26333d;
+  --line-strong:#3a4a57;
+  --text:#e5eaee;
+  --muted:#94a3ad;
+  --faint:#64737e;
+  --orange:#f39a3f;
+  --gold:#e2c57d;
+  --cyan:#70d8ff;
+  --green:#7dd998;
+  --yellow:#e5c66c;
+  --red:#ff7474;
+  --purple:#c6a5ff;
+  --shadow:0 18px 55px rgba(0,0,0,.32);
+  --sidebar:292px;
+  --topbar:76px;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; background:var(--bg); }
+body { margin:0; background:var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.48; }
+button,input { font:inherit; }
+a { color:inherit; }
+code,pre,.ref-key,.signature,.kbd,.eyebrow,.meta-line,.status,.nav-count { font-family:"IBM Plex Mono","Cascadia Mono","SFMono-Regular",Consolas,monospace; }
+.topbar { position:sticky; top:0; z-index:50; display:grid; grid-template-columns:minmax(250px,1fr) minmax(320px,780px) auto; gap:16px; align-items:center; min-height:var(--topbar); padding:10px 18px; background:rgba(7,10,13,.94); border-bottom:1px solid var(--line); backdrop-filter:blur(16px); }
+.brand { min-width:0; }
+.brand-kicker { color:var(--orange); font:800 11px/1.1 "IBM Plex Mono","Cascadia Mono",monospace; letter-spacing:.16em; text-transform:uppercase; }
+.brand h1 { margin:3px 0 0; font-size:20px; line-height:1.1; color:var(--gold); letter-spacing:.01em; }
+.search-shell { position:relative; }
+.search-shell input { width:100%; height:44px; border:1px solid var(--line-strong); border-radius:4px; background:#080e13; color:var(--text); padding:0 94px 0 42px; outline:none; box-shadow:0 0 0 1px #000 inset; }
+.search-shell input:focus { border-color:var(--cyan); box-shadow:0 0 0 2px rgba(112,216,255,.14); }
+.search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--faint); font-size:18px; }
+.search-hint { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:var(--faint); border:1px solid var(--line); background:var(--panel); padding:2px 7px; border-radius:3px; font:700 10px/1.5 "IBM Plex Mono","Cascadia Mono",monospace; }
+.result-count { white-space:nowrap; color:var(--muted); font:700 11px/1.2 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }
+.page { display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); max-width:1740px; margin:0 auto; }
+.sidebar { position:sticky; top:var(--topbar); align-self:start; height:calc(100vh - var(--topbar)); overflow:auto; border-right:1px solid var(--line); background:linear-gradient(180deg,#0a1015,#070b0f); padding:16px 12px 30px; }
+.sidebar-title { margin:0 8px 12px; color:var(--faint); font:800 10px/1.2 "IBM Plex Mono","Cascadia Mono",monospace; letter-spacing:.14em; text-transform:uppercase; }
+.nav-section { margin:5px 0 14px; }
+.nav-section > a { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--gold); text-decoration:none; font-weight:800; padding:7px 8px; border-left:2px solid transparent; }
+.nav-section > a:hover,.nav-section > a.active { background:var(--panel); border-left-color:var(--orange); }
+.nav-count { color:var(--faint); font-size:10px; }
+.nav-entry { display:block; text-decoration:none; color:var(--muted); padding:5px 8px 5px 18px; border-left:1px solid var(--line); margin-left:8px; font-size:12px; line-height:1.25; }
+.nav-entry:hover,.nav-entry.active { color:var(--text); background:#0d151c; border-left-color:var(--cyan); }
+.nav-entry[hidden],.nav-section[hidden] { display:none; }
+.content { min-width:0; padding:24px 28px 80px; }
+.hero { border:1px solid var(--line-strong); background:linear-gradient(135deg,#101a22 0%,#0a1015 58%,#141109 100%); box-shadow:var(--shadow),0 0 0 1px #000 inset; padding:28px; border-radius:4px; }
+.hero-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:20px; align-items:start; }
+.eyebrow { color:var(--orange); font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+.hero h2 { margin:5px 0 10px; color:var(--gold); font-size:clamp(28px,4vw,48px); line-height:1; letter-spacing:-.03em; }
+.hero p { max-width:880px; margin:0; color:#bdc8cf; font-size:16px; }
+.hero-meta { display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; }
+.meta-chip { border:1px solid var(--line); background:#080d11; color:var(--muted); border-radius:3px; padding:5px 8px; font-size:11px; white-space:nowrap; }
+.module-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:20px; }
+.module-card { border:1px solid var(--line); background:rgba(7,11,15,.7); padding:14px; border-radius:3px; }
+.module-card h3 { margin:0 0 3px; font-size:15px; color:var(--text); }
+.module-card .module-short { color:var(--orange); font:700 11px/1.35 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.05em; }
+.module-card p { margin:8px 0 0; color:var(--muted); font-size:13px; }
+.quick-start { margin-top:14px; border:1px solid var(--line); background:var(--panel); border-radius:3px; padding:14px; }
+.quick-start-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.quick-start h3 { margin:0; color:var(--gold); font-size:15px; }
+.quick-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.quick-item { position:relative; background:#070d12; border:1px solid var(--line); padding:10px 42px 10px 10px; min-height:66px; }
+.quick-label { color:var(--muted); font-size:11px; margin-bottom:5px; }
+.quick-item code { display:block; color:var(--cyan); white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+.filters { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0 0; }
+.filter-button { border:1px solid var(--line); background:var(--panel); color:var(--muted); border-radius:3px; padding:6px 9px; cursor:pointer; }
+.filter-button:hover { border-color:var(--line-strong); color:var(--text); }
+.filter-button.active { color:var(--gold); border-color:var(--orange); background:#17130e; }
+.reference-section { scroll-margin-top:calc(var(--topbar) + 18px); margin-top:34px; }
+.section-head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:end; padding-bottom:9px; border-bottom:1px solid var(--line-strong); }
+.section-head h2 { margin:0; color:var(--gold); font-size:24px; line-height:1.1; }
+.section-head p { margin:5px 0 0; color:var(--muted); max-width:850px; }
+.section-index { color:var(--faint); font:700 11px/1.3 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }
+.entries { display:grid; gap:9px; margin-top:12px; }
+.reference-entry { scroll-margin-top:calc(var(--topbar) + 18px); border:1px solid var(--line); background:var(--panel); border-radius:3px; box-shadow:0 0 0 1px rgba(0,0,0,.28) inset; overflow:hidden; }
+.reference-entry:hover { border-color:var(--line-strong); }
+.entry-main { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:start; padding:14px; }
+.entry-heading { min-width:0; }
+.entry-meta { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-bottom:5px; }
+.ref-key { color:var(--cyan); font-size:10px; overflow-wrap:anywhere; }
+.type-chip { color:var(--faint); border-left:1px solid var(--line); padding-left:7px; font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+.entry-title { margin:0; font-size:18px; color:var(--text); line-height:1.2; }
+.entry-summary { margin:6px 0 0; color:#b8c3ca; max-width:1020px; }
+.entry-side { display:flex; flex-direction:column; gap:6px; align-items:flex-end; min-width:120px; }
+.module-badge,.status { display:inline-flex; align-items:center; min-height:23px; border:1px solid var(--line); border-radius:999px; padding:2px 8px; white-space:nowrap; font-size:10px; font-weight:800; }
+.module-badge { color:var(--gold); background:#17140c; }
+.status.available { color:var(--green); border-color:#315d3d; background:#0d2113; }
+.status.planned { color:var(--yellow); border-color:#66562a; background:#241f0e; }
+.status.optional { color:var(--purple); border-color:#57487c; background:#191328; }
+.status.reserved { color:var(--red); border-color:#6d3030; background:#271010; }
+.signature { margin:0 14px 12px; border:1px solid #193444; background:#071017; color:var(--cyan); padding:9px 10px; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+.inline-details { border-top:1px solid var(--line); background:var(--panel-3); }
+.inline-details > summary { cursor:pointer; user-select:none; list-style:none; color:var(--gold); padding:9px 14px; font-weight:800; font-size:12px; }
+.inline-details > summary::-webkit-details-marker { display:none; }
+.inline-details > summary::before { content:'＋'; display:inline-block; width:18px; color:var(--orange); }
+.inline-details[open] > summary::before { content:'−'; }
+.detail-body { padding:0 14px 14px; display:grid; gap:10px; }
+.detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+.detail-item { border:1px solid var(--line); background:#0b1218; padding:9px; }
+.detail-label { color:var(--orange); font:800 10px/1.2 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+.detail-value { color:#c5ced4; font-size:13px; }
+.note-list { margin:0; padding:0; list-style:none; display:grid; gap:5px; }
+.note-list li { border-left:2px solid var(--orange); background:#0b1218; color:var(--muted); padding:6px 8px; }
+.table-wrap { overflow:auto; border:1px solid var(--line); }
+table { width:100%; border-collapse:collapse; min-width:560px; }
+th,td { padding:7px 8px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); border-right:1px solid var(--line); }
+th:last-child,td:last-child { border-right:0; }
+tr:last-child td { border-bottom:0; }
+th { color:var(--cyan); background:#0b1821; font:800 10px/1.2 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.07em; }
+td { color:#c2ccd2; font-size:12px; background:#091015; }
+.code-block { position:relative; border:1px solid var(--line); background:#050a0e; }
+.code-block pre { margin:0; padding:12px 46px 12px 12px; overflow:auto; color:var(--cyan); font-size:12px; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
+.copy-button { position:absolute; top:7px; right:7px; border:1px solid var(--line); background:#111a21; color:var(--muted); border-radius:3px; padding:4px 7px; cursor:pointer; font:800 9px/1.2 "IBM Plex Mono","Cascadia Mono",monospace; text-transform:uppercase; letter-spacing:.06em; }
+.copy-button:hover { color:var(--cyan); border-color:var(--cyan); }
+.copy-button.copied { color:var(--green); border-color:var(--green); }
+.anchor-button { border:0; background:transparent; color:var(--faint); cursor:pointer; padding:0; font-size:13px; }
+.anchor-button:hover { color:var(--cyan); }
+.empty-state { display:none; border:1px solid var(--line); background:var(--panel); color:var(--muted); padding:24px; text-align:center; margin-top:22px; }
+.footer { margin-top:40px; padding:18px 0 0; border-top:1px solid var(--line); color:var(--faint); font-size:12px; }
+.hidden-by-search { display:none !important; }
+mark { background:#433314; color:#ffe6a3; padding:0 1px; }
+@media (max-width:1080px) {
+  :root { --sidebar:245px; }
+  .topbar { grid-template-columns:1fr minmax(280px,520px); }
+  .result-count { display:none; }
+  .module-grid { grid-template-columns:1fr; }
+}
+@media (max-width:820px) {
+  :root { --topbar:124px; }
+  .topbar { grid-template-columns:1fr; gap:8px; padding:10px 12px; }
+  .brand h1 { font-size:18px; }
+  .page { display:block; }
+  .sidebar { position:relative; top:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:10px 12px; display:flex; gap:6px; overflow:auto; }
+  .sidebar-title,.nav-entry,.nav-count { display:none; }
+  .nav-section { margin:0; flex:0 0 auto; }
+  .nav-section > a { border:1px solid var(--line); border-left-width:1px; padding:6px 9px; }
+  .content { padding:16px 12px 60px; }
+  .hero { padding:18px; }
+  .hero-row { grid-template-columns:1fr; }
+  .hero-meta { justify-content:flex-start; }
+  .quick-grid,.detail-grid { grid-template-columns:1fr; }
+  .entry-main { grid-template-columns:1fr; }
+  .entry-side { flex-direction:row; align-items:center; justify-content:flex-start; min-width:0; }
+}
+@media (max-width:520px) {
+  .quick-grid { grid-template-columns:1fr; }
+  .hero h2 { font-size:30px; }
+  .section-head { grid-template-columns:1fr; }
+}
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print {
+  .topbar,.sidebar,.filters,.copy-button,.anchor-button { display:none !important; }
+  .page { display:block; }
+  .content { padding:0; }
+  .hero,.reference-entry,.quick-start { break-inside:avoid; box-shadow:none; }
+  .inline-details > summary { display:none; }
+  .inline-details:not([open]) .detail-body { display:grid; }
+  body { background:white; color:black; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-kicker">Fireshit / public documentation</div>
+    <h1>Reference Matrix</h1>
+  </div>
+  <label class="search-shell" aria-label="Search the reference">
+    <span class="search-icon">⌕</span>
+    <input id="search" type="search" autocomplete="off" placeholder="Search capabilities, commands, hotkeys, paths…">
+    <span class="search-hint">/</span>
+  </label>
+  <div class="result-count" id="resultCount">0 entries</div>
+</header>
+<div class="page">
+  <aside class="sidebar" id="sidebar" aria-label="Reference index">
+    <div class="sidebar-title">Index</div>
+  </aside>
+  <main class="content">
+    <section class="hero" id="overview">
+      <div class="hero-row">
+        <div>
+          <div class="eyebrow">Wayfire utility suite</div>
+          <h2>Fireshit Reference Matrix</h2>
+          <p>Fireshit combines suite control, application/output/region capture, and persistent Wayfire instrumentation through three focused projects. This page is the public capability and command reference: searchable, direct, and entirely self-contained.</p>
+        </div>
+        <div class="hero-meta">
+          <span class="meta-chip">3 modules</span>
+          <span class="meta-chip">inline details</span>
+          <span class="meta-chip">Public reference · July 2026</span>
+        </div>
+      </div>
+      <div class="module-grid" id="moduleGrid"></div>
+      <div class="quick-start">
+        <div class="quick-start-head"><h3>Quick start</h3><span class="eyebrow">common operations</span></div>
+        <div class="quick-grid" id="quickGrid"></div>
+      </div>
+      <div class="filters" id="filters" aria-label="Filter by availability"></div>
+    </section>
+    <div id="reference"></div>
+    <div class="empty-state" id="emptyState">No reference entries match this search and availability filter.</div>
+    <footer class="footer">Fireshit · Firemod · FrameTap · SUBSTR8 HUD — merged public capability reference</footer>
+  </main>
+</div>
+<script id="fireshit-reference-data" type="application/json">{
+  "meta": {
+    "title": "Fireshit Reference Matrix",
+    "subtitle": "Wayfire session control, application/output/region capture, and persistent telemetry.",
+    "snapshot": "Public reference · July 2026",
+    "modules": [
+      "Firemod",
+      "FrameTap",
+      "SUBSTR8 HUD"
+    ]
+  },
+  "statusLabels": {
+    "available": "Available",
+    "planned": "Planned",
+    "optional": "Optional",
+    "reserved": "Reserved"
+  },
+  "modules": [
+    {
+      "id": "firemod",
+      "name": "Firemod",
+      "short": "Suite shell, registry, and settings authority",
+      "description": "Maps Fireshit and external capabilities, owns first-party suite settings, and projects available actions through a global flat-top hex utility grid."
+    },
+    {
+      "id": "frametap",
+      "name": "FrameTap",
+      "short": "Application, output, and region capture",
+      "description": "Records one application, one complete Wayfire output, or one selected output region with route-appropriate audio and an optional application-only shareable viewport."
+    },
+    {
+      "id": "substr8-hud",
+      "name": "SUBSTR8 HUD",
+      "short": "Persistent telemetry and console surface",
+      "description": "Hosts a real TTY mirror, shared console, Wayfire diagnostics, and terminal telemetry in configurable left, right, or fullscreen layouts."
+    }
+  ],
+  "quickStart": [
+    {
+      "label": "Open the Fireshit utility grid",
+      "code": "SUPER+middle-click"
+    },
+    {
+      "label": "Record one launched application",
+      "code": "frametap -- ./your-app"
+    },
+    {
+      "label": "Record one complete output",
+      "code": "frametap --output DP-1"
+    },
+    {
+      "label": "Draw and record a region",
+      "code": "frametap --region"
+    },
+    {
+      "label": "Cycle the HUD",
+      "code": "SUPER+Home"
+    },
+    {
+      "label": "Switch the HUD to fullscreen",
+      "code": "./run.sh layout fullscreen"
+    }
+  ],
+  "sections": [
+    {
+      "id": "suite",
+      "label": "Suite Reference",
+      "description": "How the three projects divide work, cooperate, and expose the shortest public paths into Fireshit.",
+      "entries": [
+        {
+          "id": "suite.module-map",
+          "title": "Module map",
+          "type": "overview",
+          "module": "Fireshit",
+          "status": "available",
+          "summary": "Three independent projects present one coherent Wayfire utility suite without collapsing into one process.",
+          "details": [
+            {
+              "label": "Firemod",
+              "value": "Owns the suite registry, global utility surface, first-party settings, custom actions, discovery, and dispatch coordination."
+            },
+            {
+              "label": "FrameTap",
+              "value": "Owns application, whole-output, and one-output region recording, plus application-only and system-output audio routes."
+            },
+            {
+              "label": "SUBSTR8 HUD",
+              "value": "Owns persistent HUD geometry, state, panels, terminal processes, the real TTY mirror, shared console, and telemetry banks."
+            }
+          ],
+          "notes": [
+            "Firemod can present an action without absorbing the module that performs it.",
+            "FrameTap and SUBSTR8 HUD remain directly usable when the Firemod settings window is closed."
+          ],
+          "tags": [
+            "suite",
+            "modules",
+            "ownership",
+            "firemod",
+            "frametap",
+            "hud"
+          ]
+        },
+        {
+          "id": "suite.action-map",
+          "title": "Capture and utility action map",
+          "type": "capability",
+          "module": "Fireshit",
+          "status": "available",
+          "summary": "Recording is consolidated under FrameTap; still-image capture remains reserved for the admitted screenshot pass.",
+          "table": {
+            "headers": [
+              "Action",
+              "Authority",
+              "Public route",
+              "State"
+            ],
+            "rows": [
+              [
+                "Screenshot",
+                "Reserved screenshot authority",
+                "Firemod canonical hex",
+                "Reserved"
+              ],
+              [
+                "Screen Snip",
+                "Reserved screenshot authority",
+                "Firemod canonical hex",
+                "Reserved"
+              ],
+              [
+                "Record Screen",
+                "FrameTap output capture",
+                "frametap --output NAME",
+                "Available directly; Firemod route pending"
+              ],
+              [
+                "Record Application",
+                "FrameTap application capture",
+                "frametap -- <application>",
+                "Available"
+              ],
+              [
+                "Record Region",
+                "FrameTap region capture",
+                "frametap --region",
+                "Available directly; Firemod route pending"
+              ],
+              [
+                "Color Picker",
+                "Firemod",
+                "SUPER+middle-click → Color Picker",
+                "Available"
+              ]
+            ]
+          },
+          "notes": [
+            "The screenshot destination fields in FrameTap configuration reserve a stable future path; FrameTap 0.6 still records video only.",
+            "The suite does not substitute unrelated screenshot or recording applications behind these names."
+          ],
+          "tags": [
+            "screenshot",
+            "screen snip",
+            "record screen",
+            "record application",
+            "record region",
+            "color picker",
+            "ownership"
+          ]
+        },
+        {
+          "id": "suite.global-controls",
+          "title": "Global controls",
+          "type": "controls",
+          "module": "Fireshit",
+          "status": "available",
+          "summary": "The shortest keyboard and pointer routes into the suite’s primary surfaces.",
+          "table": {
+            "headers": [
+              "Control",
+              "Result"
+            ],
+            "rows": [
+              [
+                "SUPER+middle-click",
+                "Open or relocate Firemod’s flat-top utility grid at the pointer."
+              ],
+              [
+                "SUPER+Home",
+                "Advance SUBSTR8 HUD by one state."
+              ],
+              [
+                "Ctrl+C",
+                "Stop an active foreground FrameTap session cleanly."
+              ],
+              [
+                "Page Up / Page Down",
+                "Move through visible HUD panels while the pane selector owns focus."
+              ]
+            ]
+          },
+          "tags": [
+            "hotkeys",
+            "super middle click",
+            "super home",
+            "ctrl c",
+            "page up",
+            "page down",
+            "global"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "firemod",
+      "label": "Firemod",
+      "description": "Fireshit Core: registry, first-party settings, curated configuration discovery, custom actions, and the global hex utility surface.",
+      "entries": [
+        {
+          "id": "firemod.module-registry",
+          "title": "Capability and module registry",
+          "type": "capability",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Maintains the actionable map of Fireshit modules, admitted external capabilities, and deliberate user actions.",
+          "signature": "Firemod → Overview / Modules",
+          "details": [
+            {
+              "label": "Shows",
+              "value": "Module identity, installation state, action ownership, availability, and disabled reasons."
+            },
+            {
+              "label": "Dispatch",
+              "value": "Each action is sent to its registered owner through a stable capability ID."
+            },
+            {
+              "label": "External contracts",
+              "value": "Contract-version 1 manifests may opt into the menu; passive discovery alone never creates an executable action."
+            }
+          ],
+          "tags": [
+            "registry",
+            "modules",
+            "capabilities",
+            "inventory",
+            "availability",
+            "dispatch"
+          ]
+        },
+        {
+          "id": "firemod.configuration-discovery",
+          "title": "Curated configuration discovery",
+          "type": "capability",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Finds attributable Linux configuration sources while keeping ambiguous filesystem archaeology out of the normal view.",
+          "signature": "Firemod → Settings Browser",
+          "details": [
+            {
+              "label": "Readable families",
+              "value": "INI, TOML, JSON variants, YAML, XML, properties and environment files, scripts, GSettings/dconf, systemd user configuration, and SQLite application databases."
+            },
+            {
+              "label": "Attribution",
+              "value": "Results must belong cleanly to a registered module, recognized desktop application, or known system authority."
+            },
+            {
+              "label": "Uncertain results",
+              "value": "Ambiguous, stale, duplicate, orphaned, and low-confidence candidates stay hidden until diagnostic results are enabled."
+            },
+            {
+              "label": "Write boundary",
+              "value": "Recognizing a format does not make its settings writable; external mutation requires a reviewed adapter with validation and recovery."
+            }
+          ],
+          "notes": [
+            "Firemod reads useful configuration information without executing unknown source files."
+          ],
+          "tags": [
+            "settings browser",
+            "configuration",
+            "ini",
+            "toml",
+            "json",
+            "yaml",
+            "xml",
+            "dconf",
+            "systemd",
+            "sqlite",
+            "uncertain"
+          ]
+        },
+        {
+          "id": "firemod.source-actions",
+          "title": "Source actions",
+          "type": "controls",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Moves directly from a discovered setting or authority to the exact source behind it.",
+          "signature": "Open File · Open Folder · Copy Path · Open Native Settings · Rescan",
+          "details": [
+            {
+              "label": "Open File",
+              "value": "Open the exact discovered configuration source."
+            },
+            {
+              "label": "Open Folder",
+              "value": "Reveal the containing directory."
+            },
+            {
+              "label": "Copy Path",
+              "value": "Copy the exact path without rewriting it."
+            },
+            {
+              "label": "Open Native Settings",
+              "value": "Use an application-provided settings surface when one is declared."
+            },
+            {
+              "label": "Rescan",
+              "value": "Refresh module state, capability contracts, and configuration sources."
+            }
+          ],
+          "tags": [
+            "open file",
+            "open folder",
+            "copy path",
+            "native settings",
+            "rescan"
+          ]
+        },
+        {
+          "id": "firemod.fireshit-settings",
+          "title": "Fireshit Settings and revision workflow",
+          "type": "workflow",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Keeps suite-owned configuration separate from discovered external settings and applies changes deliberately.",
+          "signature": "Save · Apply · Discard",
+          "details": [
+            {
+              "label": "Draft",
+              "value": "Typing, toggling, reordering, icon selection, and preview alter only the current in-memory draft."
+            },
+            {
+              "label": "Save",
+              "value": "Persist the draft and create a revision only when its content changed."
+            },
+            {
+              "label": "Apply",
+              "value": "Activate the most recently saved Fireshit configuration; failed activation restores the last working registry."
+            },
+            {
+              "label": "Discard",
+              "value": "Restore the saved configuration and abandon unsaved edits."
+            },
+            {
+              "label": "History",
+              "value": "Retain the ten most recent distinct deliberate revisions."
+            },
+            {
+              "label": "Close behavior",
+              "value": "Unsaved edits produce Save / Discard / Cancel rather than autosaving."
+            }
+          ],
+          "code": [
+            "${XDG_CONFIG_HOME:-$HOME/.config}/firemod/config.ini\n${XDG_CONFIG_HOME:-$HOME/.config}/firemod/actions.d/*.action\n${XDG_STATE_HOME:-$HOME/.local/state}/firemod/history/*.ini"
+          ],
+          "tags": [
+            "fireshit settings",
+            "save",
+            "apply",
+            "discard",
+            "draft",
+            "history",
+            "revisions",
+            "xdg"
+          ]
+        },
+        {
+          "id": "firemod.hex-menu",
+          "title": "Flat-top hex utility grid",
+          "type": "control",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Projects the capability registry into one pointer-centered hex grid with stable canonical positions and outward-growing extensions.",
+          "signature": "SUPER+middle-click",
+          "table": {
+            "headers": [
+              "Position",
+              "Canonical action"
+            ],
+            "rows": [
+              [
+                "Center",
+                "Color Picker"
+              ],
+              [
+                "Top",
+                "Screenshot"
+              ],
+              [
+                "Upper-right",
+                "Screen Snip"
+              ],
+              [
+                "Lower-right",
+                "Record Region"
+              ],
+              [
+                "Bottom",
+                "Record Screen"
+              ],
+              [
+                "Lower-left",
+                "Record Application"
+              ],
+              [
+                "Upper-left",
+                "Firemod Settings"
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Extensions",
+              "value": "Additional registered and user actions begin at Ring 2’s top position and fill clockwise."
+            },
+            {
+              "label": "Spatial memory",
+              "value": "Unavailable or hidden canonical actions do not cause the inner seven positions to collapse or shuffle."
+            },
+            {
+              "label": "Pointer",
+              "value": "Hover and polygon-accurate clicking act on one hex; clicking outside closes the surface."
+            },
+            {
+              "label": "Keyboard",
+              "value": "Tab / Shift+Tab traverse registry order, arrow keys move geometrically, Enter or Space activates, and Escape closes."
+            },
+            {
+              "label": "Fit",
+              "value": "The complete grid is translated and, when necessary, uniformly reduced to stay within the active output."
+            },
+            {
+              "label": "Hover plaque",
+              "value": "Shows name, description, availability, or disabled reason without changing grid geometry."
+            }
+          ],
+          "notes": [
+            "A second SUPER+middle-click closes the current grid or relocates the single live grid to the new pointer position.",
+            "Record Screen and Record Region already exist in FrameTap; their direct Firemod registry routes remain an integration step."
+          ],
+          "tags": [
+            "global menu",
+            "hex grid",
+            "flat top",
+            "rings",
+            "super middle click",
+            "keyboard",
+            "hover"
+          ]
+        },
+        {
+          "id": "firemod.custom-actions",
+          "title": "Custom application and script actions",
+          "type": "capability",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Adds deliberate application or executable-script actions to the outer utility rings without turning discovery into execution.",
+          "details": [
+            {
+              "label": "Launch contract",
+              "value": "Executable plus ordered arguments, optional working directory, enabled state, and optional terminal launch."
+            },
+            {
+              "label": "Presentation",
+              "value": "Human-readable label, hover title and subtitle, selected hex color, order, and optional PNG."
+            },
+            {
+              "label": "Icon handling",
+              "value": "PNG only. Firemod preserves the source, scales down proportionally, never upscales, and performs no crop, padding, recolor, normalization, or conversion."
+            },
+            {
+              "label": "Fallback",
+              "value": "Missing, unreadable, invalid, or non-PNG artwork uses run-script.png."
+            },
+            {
+              "label": "Safety",
+              "value": "Preview, scan, Save, and Apply never execute the action; scripts use argument vectors rather than concatenated shell strings."
+            }
+          ],
+          "tags": [
+            "custom actions",
+            "applications",
+            "scripts",
+            "arguments",
+            "terminal",
+            "png",
+            "run-script",
+            "outer ring"
+          ]
+        },
+        {
+          "id": "firemod.color-picker",
+          "title": "Color Picker",
+          "type": "capability",
+          "module": "Firemod",
+          "status": "available",
+          "summary": "Samples the final composited pixel under a crosshair and makes practical color values immediately usable.",
+          "signature": "SUPER+middle-click → Color Picker",
+          "details": [
+            {
+              "label": "Accept",
+              "value": "Left click copies uppercase #RRGGBB immediately."
+            },
+            {
+              "label": "Formats",
+              "value": "HEX, RGB, HSL, and OKLCH."
+            },
+            {
+              "label": "Cancel",
+              "value": "Escape or right click leaves the clipboard unchanged."
+            },
+            {
+              "label": "Presentation",
+              "value": "Crosshair plus a local 9 × 9 magnifier; no persistent color history."
+            }
+          ],
+          "tags": [
+            "color picker",
+            "hex",
+            "rgb",
+            "hsl",
+            "oklch",
+            "clipboard",
+            "crosshair",
+            "magnifier"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frametap",
+      "label": "FrameTap",
+      "description": "One capture authority for exact applications, complete Wayfire outputs, and selected one-output regions.",
+      "entries": [
+        {
+          "id": "frametap.capture-modes",
+          "title": "Capture modes",
+          "type": "overview",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Selects capture by application object, complete output destination, or logical region while preserving one coherent recording pipeline.",
+          "table": {
+            "headers": [
+              "Mode",
+              "Typical command",
+              "Video source",
+              "Automatic audio"
+            ],
+            "rows": [
+              [
+                "Launch application",
+                "frametap -- ./your-app",
+                "First matching toplevel from the launched process tree",
+                "Application only"
+              ],
+              [
+                "Existing application",
+                "frametap --focused",
+                "One selected mapped Wayfire toplevel",
+                "Off"
+              ],
+              [
+                "Complete output",
+                "frametap --output DP-1",
+                "Complete selected Wayfire output scene",
+                "Current default system output"
+              ],
+              [
+                "Selected region",
+                "frametap --region",
+                "One logical rectangle inside one output",
+                "Current default system output"
+              ]
+            ]
+          },
+          "notes": [
+            "Every capture route uses the same bounded DMA-BUF transport, explicit synchronization, Intel VA-API H.264 encoder, exact 60 Hz timeline, and Matroska writer."
+          ],
+          "tags": [
+            "capture modes",
+            "application",
+            "output",
+            "region",
+            "recording"
+          ]
+        },
+        {
+          "id": "frametap.configuration",
+          "title": "User configuration and automatic destinations",
+          "type": "configuration",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Provides XDG-native defaults so normal capture commands can record without an explicit destination path.",
+          "signature": "${XDG_CONFIG_HOME:-$HOME/.config}/frametap/config.ini",
+          "code": [
+            "frametap --config-path\nframetap --show-config\nframetap --write-default-config",
+            "[paths]\nrecordings = ~/Captures/recordings\nscreenshots = ~/Captures/screens\n\n[naming]\nrecording = [frametap]-{timestamp}.mkv\nscreenshot = [frametap]-{timestamp}.png\n\n[defaults]\nrecord = on\naudio = on\naudio_mode = automatic\nviewport = off"
+          ],
+          "details": [
+            {
+              "label": "Resolution order",
+              "value": "Explicit CLI option, then user configuration, then compiled default."
+            },
+            {
+              "label": "Creation",
+              "value": "The first real capture creates the default file; help, version, discovery, and config inspection remain read-only."
+            },
+            {
+              "label": "Naming",
+              "value": "{timestamp} uses local YYYYMMDD-HHMMSS time; collisions receive -01, -02, and later suffixes instead of overwriting."
+            },
+            {
+              "label": "Explicit path",
+              "value": "--record PATH still overrides automatic destination generation."
+            },
+            {
+              "label": "Viewport-only",
+              "value": "--no-record disables configured automatic recording for an application session."
+            },
+            {
+              "label": "Screenshot fields",
+              "value": "Reserved for the screenshot pass; FrameTap 0.6 records video only."
+            }
+          ],
+          "tags": [
+            "config.ini",
+            "xdg",
+            "automatic path",
+            "recordings",
+            "timestamp",
+            "no overwrite",
+            "no-record",
+            "show-config"
+          ]
+        },
+        {
+          "id": "frametap.launch-wrapper",
+          "title": "Launch-wrapper application capture",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Launches an application, follows its process tree, and captures the first newly mapped Wayfire toplevel that belongs to it.",
+          "signature": "frametap [options] -- <application> [args...]",
+          "code": [
+            "frametap -- ./your-app",
+            "frametap --record recordings/demo.mkv -- ./your-app",
+            "frametap --no-record --viewport=on -- ./your-app"
+          ],
+          "details": [
+            {
+              "label": "Ownership",
+              "value": "Matches the launched process group and /proc ancestry rather than guessing from focus, title, app ID, or timing alone."
+            },
+            {
+              "label": "Existing windows",
+              "value": "Views present before launch are excluded by ID."
+            },
+            {
+              "label": "Discovery timeout",
+              "value": "Fails after 20 seconds rather than attaching to an unrelated application."
+            },
+            {
+              "label": "Default audio",
+              "value": "Application-only audio through a private per-session PipeWire-Pulse sink."
+            },
+            {
+              "label": "Stop behavior",
+              "value": "Natural application exit ends capture; Ctrl+C stops FrameTap and forwards SIGINT to the launched process group."
+            }
+          ],
+          "tags": [
+            "launch wrapper",
+            "process tree",
+            "application args",
+            "private sink",
+            "record",
+            "viewport"
+          ]
+        },
+        {
+          "id": "frametap.existing-application",
+          "title": "Existing-application selection",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Captures one already-mapped Wayfire application by focus, stable app ID, or exact transient view ID.",
+          "signature": "frametap (--focused | --app-id <id> | --view-id <id>)",
+          "table": {
+            "headers": [
+              "Mode",
+              "Command",
+              "Use"
+            ],
+            "rows": [
+              [
+                "List",
+                "frametap --list",
+                "Show view ID, dimensions, focus state, app_id, and title."
+              ],
+              [
+                "Focused",
+                "--focused",
+                "Use the currently focused Wayfire toplevel."
+              ],
+              [
+                "Application ID",
+                "--app-id <id>",
+                "Select a mapped view by Wayland app_id."
+              ],
+              [
+                "View ID",
+                "--view-id <id>",
+                "Select one exact transient view."
+              ]
+            ]
+          },
+          "notes": [
+            "Exactly one selector is allowed. Existing-view capture does not claim or reroute the application’s audio, so automatic audio resolves to off."
+          ],
+          "tags": [
+            "list",
+            "focused",
+            "app id",
+            "view id",
+            "target",
+            "toplevel",
+            "existing application"
+          ]
+        },
+        {
+          "id": "frametap.output-recording",
+          "title": "Complete-output recording",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Records the complete scene of one named Wayfire output with the system mix feeding the current default audio sink.",
+          "signature": "frametap --output <name>",
+          "code": [
+            "frametap --list-outputs",
+            "frametap --output DP-1",
+            "frametap --output DP-1 --record recordings/desktop.mkv",
+            "frametap --output DP-1 --audio=off"
+          ],
+          "details": [
+            {
+              "label": "Source",
+              "value": "The complete selected output scene rather than an application subtree."
+            },
+            {
+              "label": "Geometry",
+              "value": "Output name, layout geometry, and scale are frozen for the session."
+            },
+            {
+              "label": "Change handling",
+              "value": "Output removal, geometry change, or scale change ends the session instead of silently changing the recording contract."
+            },
+            {
+              "label": "Viewport",
+              "value": "Forced off so FrameTap Output cannot recursively enter the captured scene."
+            },
+            {
+              "label": "Cursor",
+              "value": "The hardware cursor is currently excluded."
+            }
+          ],
+          "tags": [
+            "output",
+            "full screen",
+            "screen recording",
+            "list outputs",
+            "system audio",
+            "cursor"
+          ]
+        },
+        {
+          "id": "frametap.region-recording",
+          "title": "Selected-region recording",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Draws or reuses one logical rectangle inside a single output and records only that spatial region.",
+          "signature": "frametap --region [--output <name>]",
+          "code": [
+            "frametap --region",
+            "frametap --region --output DP-1",
+            "frametap --region=120,80,1280,720 --output DP-1"
+          ],
+          "details": [
+            {
+              "label": "Interactive selection",
+              "value": "Left press, drag, and release selects; right click or Escape cancels."
+            },
+            {
+              "label": "Coordinates",
+              "value": "Explicit regions use output-local logical x,y,width,height values."
+            },
+            {
+              "label": "Containment",
+              "value": "The rectangle must have positive dimensions and remain inside one output; cross-output regions are not accepted."
+            },
+            {
+              "label": "Selector cleanup",
+              "value": "The fullscreen selector unmaps and synchronizes before recording starts so it does not appear in the capture."
+            },
+            {
+              "label": "Audio and viewport",
+              "value": "Automatic audio uses the current default system-output mix; viewport remains off to prevent recursion."
+            }
+          ],
+          "tags": [
+            "region",
+            "screen snip recording",
+            "rectangle",
+            "coordinates",
+            "left drag",
+            "escape",
+            "one output"
+          ]
+        },
+        {
+          "id": "frametap.audio",
+          "title": "Audio modes",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Selects audio according to capture ownership rather than mixing unrelated sources by default.",
+          "signature": "--audio=automatic | app | system | off",
+          "table": {
+            "headers": [
+              "Mode",
+              "Valid with",
+              "Behavior"
+            ],
+            "rows": [
+              [
+                "automatic",
+                "All captures",
+                "Application audio for launch wrapper; system output for output/region; off for existing views."
+              ],
+              [
+                "app",
+                "Launch wrapper only",
+                "Private sink inherited by the launched process tree; unrelated applications and microphone remain excluded."
+              ],
+              [
+                "system",
+                "Output or region only",
+                "Records the monitor of the current default PipeWire-Pulse output sink."
+              ],
+              [
+                "off",
+                "All captures",
+                "Records video without audio."
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Recorded stream",
+              "value": "Opus, 48 kHz stereo, 160 kbps."
+            },
+            {
+              "label": "Local playback",
+              "value": "Launch-wrapper application audio is looped to the pre-session default sink while it is recorded."
+            },
+            {
+              "label": "FrameTap_Output",
+              "value": "Launch mode republishes the private application stream as a stable audio source for sharing."
+            },
+            {
+              "label": "Finalization",
+              "value": "Audio and video start offsets are aligned and long-running drift is reconciled before the final Matroska file is written."
+            }
+          ],
+          "tags": [
+            "audio",
+            "automatic",
+            "application only",
+            "system audio",
+            "pipewire",
+            "opus",
+            "microphone",
+            "frametap output"
+          ]
+        },
+        {
+          "id": "frametap.viewport",
+          "title": "FrameTap Output viewport",
+          "type": "command",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Publishes an application capture as a normal Wayland window for screen-share pickers without recapturing the desktop.",
+          "signature": "--viewport=off | min | on",
+          "table": {
+            "headers": [
+              "Mode",
+              "Behavior"
+            ],
+            "rows": [
+              [
+                "off",
+                "Default. Creates no output window."
+              ],
+              [
+                "min",
+                "Creates the normal live FrameTap Output window and immediately requests minimization."
+              ],
+              [
+                "on",
+                "Creates and shows the live FrameTap Output window."
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Application only",
+              "value": "Viewport modes apply to application capture; output and region capture require viewport off."
+            },
+            {
+              "label": "Screen sharing",
+              "value": "Select FrameTap Output in the sharing application’s window picker."
+            },
+            {
+              "label": "Combination",
+              "value": "Application recording and viewport publication may run together."
+            },
+            {
+              "label": "Viewport-only",
+              "value": "Use --no-record with viewport on or min when no file should be written."
+            },
+            {
+              "label": "Close request",
+              "value": "Closing FrameTap Output stops the capture session without forcibly terminating an otherwise running launched application."
+            }
+          ],
+          "tags": [
+            "viewport",
+            "screen sharing",
+            "frametap output",
+            "minimize",
+            "window picker",
+            "no-record"
+          ]
+        },
+        {
+          "id": "frametap.recording-contract",
+          "title": "Recording format, timing, and file safety",
+          "type": "behavior",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Keeps every route on one fixed-rate hardware-encoded Matroska contract with collision-safe destinations.",
+          "details": [
+            {
+              "label": "Container",
+              "value": "Matroska (.mkv)."
+            },
+            {
+              "label": "Video",
+              "value": "Intel VA-API H.264 with exact 60/1 stream-rate metadata."
+            },
+            {
+              "label": "Transport",
+              "value": "Four-buffer linear DMA-BUF pool with explicit synchronization and newest-frame-wins backpressure."
+            },
+            {
+              "label": "Application geometry",
+              "value": "Records the selected application’s compositor scene subtree rather than a monitor rectangle around it."
+            },
+            {
+              "label": "Destination safety",
+              "value": "Generated names never overwrite existing captures; failed incomplete sessions do not replace a completed destination."
+            }
+          ],
+          "notes": [
+            "Application capture excludes unrelated windows, panels, notifications, desktop content, and pointer traffic outside the selected toplevel."
+          ],
+          "tags": [
+            "mkv",
+            "h264",
+            "vaapi",
+            "60 hz",
+            "dmabuf",
+            "explicit synchronization",
+            "file safety"
+          ]
+        },
+        {
+          "id": "frametap.session-lifecycle",
+          "title": "Session lifecycle and recovery",
+          "type": "behavior",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Ends cleanly when the user, launched application, target, output contract, or capture pipeline ends the session.",
+          "signature": "Ctrl+C",
+          "details": [
+            {
+              "label": "Normal stop",
+              "value": "Ctrl+C; launch-wrapper sessions also stop when the launched application exits."
+            },
+            {
+              "label": "Application loss",
+              "value": "The session ends if the selected toplevel disappears or becomes permanently unavailable."
+            },
+            {
+              "label": "Spatial loss",
+              "value": "Output removal, geometry change, or scale change ends an output or region session."
+            },
+            {
+              "label": "Failure isolation",
+              "value": "Capture, encoding, audio, viewport, or output-file failure ends FrameTap rather than taking Wayfire down."
+            },
+            {
+              "label": "Retry",
+              "value": "Correct the selector, destination, audio route, encoder environment, or application state and rerun the command."
+            }
+          ],
+          "tags": [
+            "ctrl c",
+            "stop",
+            "failure",
+            "recovery",
+            "target disappears",
+            "output change"
+          ]
+        },
+        {
+          "id": "frametap.command-recipes",
+          "title": "Command recipes",
+          "type": "examples",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Common capture, recording, and screen-sharing combinations using configured defaults.",
+          "code": [
+            "# Inspect available targets\nframetap --list\nframetap --list-outputs",
+            "# Launch, isolate application audio, and record automatically\nframetap -- ./your-app",
+            "# Record a complete output with system audio\nframetap --output DP-1",
+            "# Draw and record a region with system audio\nframetap --region",
+            "# Application screen-share only\nframetap --no-record --viewport=on -- ./your-app",
+            "# Record an application to an explicit path and expose the viewport\nframetap --viewport=on --record recordings/demo.mkv -- ./your-app",
+            "# Inspect the completed file\nffprobe -hide_banner /path/printed/by/frametap.mkv"
+          ],
+          "tags": [
+            "examples",
+            "recipes",
+            "ffprobe",
+            "screen share",
+            "output",
+            "region",
+            "record"
+          ]
+        },
+        {
+          "id": "frametap.compatibility",
+          "title": "Compatibility and runtime requirements",
+          "type": "requirements",
+          "module": "FrameTap",
+          "status": "available",
+          "summary": "Targets a specific Linux/Wayland multimedia stack and keeps the compositor plugin narrow.",
+          "details": [
+            {
+              "label": "Desktop",
+              "value": "Linux, Wayland, and Wayfire 0.10.x."
+            },
+            {
+              "label": "Video encode",
+              "value": "Supported Intel VA-API H.264 encoding."
+            },
+            {
+              "label": "Audio",
+              "value": "PipeWire’s PulseAudio-compatible server, pactl, and FFmpeg Pulse input."
+            },
+            {
+              "label": "Media support",
+              "value": "FFmpeg-compatible Matroska, FLAC intermediate, and libopus support."
+            },
+            {
+              "label": "Build",
+              "value": "Meson and Ninja through the repository-root ./run.sh dispatcher."
+            }
+          ],
+          "notes": [
+            "Screenshot capture, microphone capture, editing, scene composition, and streaming-service integration are not current FrameTap features."
+          ],
+          "tags": [
+            "compatibility",
+            "linux",
+            "wayland",
+            "wayfire 0.10",
+            "intel vaapi",
+            "pipewire",
+            "ffmpeg",
+            "meson"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "substr8-hud",
+      "label": "SUBSTR8 HUD",
+      "description": "A configurable Wayfire instrumentation surface that stays passive until direct interaction is requested.",
+      "entries": [
+        {
+          "id": "hud.surface-placement",
+          "title": "Surface placement and output geometry",
+          "type": "capability",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Anchors to the left, right, or full width of the selected output without reserving workspace space.",
+          "signature": "./run.sh layout left | right | fullscreen",
+          "table": {
+            "headers": [
+              "Placement",
+              "Geometry"
+            ],
+            "rows": [
+              [
+                "left",
+                "Configured side width, full logical height, anchored to the left edge."
+              ],
+              [
+                "right",
+                "Configured side width, full logical height, anchored to the right edge; default."
+              ],
+              [
+                "fullscreen",
+                "Complete selected-output width and height."
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Side width",
+              "value": "Wayfire setting from 25% to 100%; default 50%."
+            },
+            {
+              "label": "Workspace behavior",
+              "value": "Windows may occupy the same area; the HUD claims no exclusive desktop zone."
+            },
+            {
+              "label": "Passive modes",
+              "value": "DESKTOP and TOP are click-through and take no keyboard focus."
+            },
+            {
+              "label": "Live placement",
+              "value": "./run.sh layout changes [hud] placement and reloads the active surface."
+            }
+          ],
+          "tags": [
+            "surface",
+            "left",
+            "right",
+            "fullscreen",
+            "width percent",
+            "output",
+            "workspace",
+            "click through"
+          ]
+        },
+        {
+          "id": "hud.state-cycle",
+          "title": "Four-state cycle",
+          "type": "control",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Moves between ambient, always-visible, interactive, and hidden behavior in one fixed loop.",
+          "signature": "SUPER+Home",
+          "table": {
+            "headers": [
+              "State",
+              "Visible position",
+              "Input"
+            ],
+            "rows": [
+              [
+                "DESKTOP",
+                "Beneath ordinary windows",
+                "Pointer passes through; no keyboard input"
+              ],
+              [
+                "TOP",
+                "Above ordinary windows",
+                "Pointer passes through; no keyboard input"
+              ],
+              [
+                "INTERACTIVE",
+                "Interactive HUD layer",
+                "Panel, pointer, terminal, drag, and navigation input enabled"
+              ],
+              [
+                "INVISIBLE",
+                "Hidden",
+                "No input"
+              ]
+            ]
+          },
+          "code": [
+            "DESKTOP → TOP → INTERACTIVE → INVISIBLE → DESKTOP"
+          ],
+          "details": [
+            {
+              "label": "Retention",
+              "value": "State changes preserve the relevant widgets, PTYs, processes, active tabs, and scrollback."
+            },
+            {
+              "label": "Interactive entry",
+              "value": "Restores the active placement topology and selects the first visible panel."
+            }
+          ],
+          "tags": [
+            "super home",
+            "desktop",
+            "top",
+            "interactive",
+            "invisible",
+            "state"
+          ]
+        },
+        {
+          "id": "hud.layouts-and-drag",
+          "title": "Layout profiles and drag arrangement",
+          "type": "layout",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Uses a three-panel side topology or five-panel fullscreen topology and remembers their arrangements independently.",
+          "code": [
+            "SIDE\n┌────────────────────────┬────────────────────────┐\n│ top-left               │ top-right              │\n├────────────────────────┴────────────────────────┤\n│ bottom-left-wide                                │\n└─────────────────────────────────────────────────┘",
+            "FULLSCREEN\n┌────────────────┬────────────────┬────────────────┐\n│ top-left       │ top-center     │ top-right      │\n├─────────────────────────┬────────────────────────┤\n│ bottom-left-wide        │ bottom-right-wide      │\n└─────────────────────────┴────────────────────────┘"
+          ],
+          "details": [
+            {
+              "label": "Profiles",
+              "value": "Left and right share the side arrangement; fullscreen retains its own arrangement."
+            },
+            {
+              "label": "Drag",
+              "value": "While INTERACTIVE, drag a visible module header to another visible panel."
+            },
+            {
+              "label": "Bank order",
+              "value": "Horizontal drop position determines the module’s order in the destination bank."
+            },
+            {
+              "label": "Process continuity",
+              "value": "Moving a module keeps the existing widget, PTY, process, active state, and scrollback."
+            },
+            {
+              "label": "Persistence",
+              "value": "The active layout profile is written immediately to config.ini."
+            },
+            {
+              "label": "Write failure",
+              "value": "A failed settings write restores the module’s previous panel and bank position."
+            }
+          ],
+          "tags": [
+            "layout",
+            "side",
+            "fullscreen",
+            "five panels",
+            "drag",
+            "bank order",
+            "persistence"
+          ]
+        },
+        {
+          "id": "hud.navigation-opacity",
+          "title": "Panel navigation, expansion, and opacity",
+          "type": "controls",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Moves through visible panels, expands one panel across the HUD, cycles its module bank, and adjusts live opacity.",
+          "table": {
+            "headers": [
+              "Control",
+              "Action"
+            ],
+            "rows": [
+              [
+                "Page Down",
+                "Select the next visible panel."
+              ],
+              [
+                "Page Up",
+                "Select the previous visible panel."
+              ],
+              [
+                "Enter",
+                "Expand or collapse the selected panel while the panel selector owns focus."
+              ],
+              [
+                "Ctrl+Tab",
+                "Select the next module in the selected panel’s bank."
+              ],
+              [
+                "Ctrl+Shift+Tab",
+                "Select the previous module in the selected panel’s bank."
+              ],
+              [
+                "Mouse wheel",
+                "Change opacity in 5% steps while the panel selector owns focus."
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Opacity range",
+              "value": "15% to 100%; the final value is retained."
+            },
+            {
+              "label": "Expansion",
+              "value": "Sibling panels are hidden without being destroyed; selection may switch directly to another expanded panel."
+            },
+            {
+              "label": "Terminal focus",
+              "value": "When a VTE owns focus, Enter, wheel, and ordinary application keys remain terminal input. Page Up or Page Down returns to panel selection."
+            }
+          ],
+          "tags": [
+            "page up",
+            "page down",
+            "enter",
+            "ctrl tab",
+            "expand",
+            "opacity",
+            "mouse wheel"
+          ]
+        },
+        {
+          "id": "hud.module-banks",
+          "title": "Module banks",
+          "type": "capability",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Hosts real terminal tools in panel-sized banks instead of reducing them to decorative dashboard widgets.",
+          "table": {
+            "headers": [
+              "Default area",
+              "Modules",
+              "Purpose"
+            ],
+            "rows": [
+              [
+                "Top-left",
+                "TTY",
+                "Read-only real Linux virtual-console visibility."
+              ],
+              [
+                "Top-right / top-center",
+                "CONSOLE · WAYFIRE",
+                "Shared interactive shell and compositor diagnostics."
+              ],
+              [
+                "Bottom banks",
+                "HTOP · BTOP · NVTOP · OPENSNITCHD · NETHOGS · IOTOP",
+                "Process, system, GPU, firewall-event, network, and storage-I/O telemetry."
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Persistent modules",
+              "value": "Keep their process state and scrollback while hidden."
+            },
+            {
+              "label": "Visible modules",
+              "value": "May run only while their tab is selected."
+            },
+            {
+              "label": "Availability",
+              "value": "Optional modules appear only when their declared commands exist."
+            },
+            {
+              "label": "Fault isolation",
+              "value": "One missing, malformed, or failed optional module does not take down the HUD."
+            }
+          ],
+          "tags": [
+            "htop",
+            "btop",
+            "nvtop",
+            "opensnitchd",
+            "nethogs",
+            "iotop",
+            "wayfire",
+            "console",
+            "module bank"
+          ]
+        },
+        {
+          "id": "hud.tty",
+          "title": "Real TTY mirror",
+          "type": "capability",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Shows a read-only screen-cell view of the real Linux virtual console instead of opening another shell.",
+          "signature": "${XDG_CONFIG_HOME:-$HOME/.config}/substr8-hud/tty.conf",
+          "details": [
+            {
+              "label": "Source",
+              "value": "Resolves from SUBSTR8_HUD_TTY, XDG_VTNR, or the active kernel VT, then reads /dev/vcsaN."
+            },
+            {
+              "label": "Viewport",
+              "value": "When the physical console is taller than the panel, the mirror follows its bottom portion to keep the newest output visible."
+            },
+            {
+              "label": "Interaction",
+              "value": "Read-only in the HUD; direct input occurs at the Linux TTY itself."
+            },
+            {
+              "label": "Separation",
+              "value": "TTY and the interactive shared CONSOLE are different modules and different authorities."
+            },
+            {
+              "label": "Failure behavior",
+              "value": "A read failure is isolated to the TTY module and reported by ./run.sh module-check."
+            }
+          ],
+          "tags": [
+            "tty",
+            "vcsa",
+            "tty.conf",
+            "read only",
+            "linux virtual terminal",
+            "mirror"
+          ]
+        },
+        {
+          "id": "hud.shared-console",
+          "title": "Shared interactive console",
+          "type": "capability",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Connects the HUD VTE and a physical Linux VT to one retained tmux-backed shell session.",
+          "code": [
+            "SUBSTR8 HUD VTE ─┐\n                  ├── tmux server: substr8-hud / session: console\nphysical VT8 ────┘",
+            "./run.sh console-status\n./run.sh console-enable --user \"$USER\" --vt 8\n./run.sh console-disable\n./run.sh console-restart\n./run.sh console-stop-session"
+          ],
+          "details": [
+            {
+              "label": "Shared state",
+              "value": "One shell, working directory, foreground program, and scrollback are visible from both clients."
+            },
+            {
+              "label": "Continuity",
+              "value": "Closing the HUD or losing Wayfire detaches the graphical client without destroying the session."
+            },
+            {
+              "label": "Physical access",
+              "value": "Ctrl+Alt+F8 reaches the same configured session directly."
+            },
+            {
+              "label": "Privilege boundary",
+              "value": "Runs as the selected non-root user without input injection, elevated capabilities, kernel changes, or shell-profile rewriting."
+            },
+            {
+              "label": "Restoration",
+              "value": "Disable and uninstall restore the prior getty state."
+            }
+          ],
+          "tags": [
+            "shared console",
+            "tmux",
+            "vt8",
+            "console status",
+            "getty",
+            "scrollback"
+          ]
+        },
+        {
+          "id": "hud.compact-btop",
+          "title": "Compact passive btop",
+          "type": "capability",
+          "module": "SUBSTR8 HUD",
+          "status": "optional",
+          "summary": "Runs a bundled SUBSTR8 btop presentation sized for the HUD when the third-party btop command is installed.",
+          "signature": "substr8-btopctl status | pause | resume | restart",
+          "details": [
+            {
+              "label": "Canvas",
+              "value": "82 columns × 16 rows."
+            },
+            {
+              "label": "Rotation",
+              "value": "Every 10 seconds between CPU + Processes and Memory + Network."
+            },
+            {
+              "label": "Interaction",
+              "value": "Passive inside the HUD."
+            },
+            {
+              "label": "Bundled integration",
+              "value": "The theme, compact profile, tmux profile, launchers, and user service install with SUBSTR8 HUD."
+            },
+            {
+              "label": "Isolation",
+              "value": "Ordinary full-screen btop and its normal configuration remain untouched."
+            },
+            {
+              "label": "Activation",
+              "value": "When btop is missing, the integration remains dormant; install btop through the operating system and rerun ./run.sh install."
+            }
+          ],
+          "tags": [
+            "btop",
+            "82x16",
+            "tmux",
+            "cpu",
+            "memory",
+            "network",
+            "processes",
+            "theme",
+            "user service"
+          ]
+        },
+        {
+          "id": "hud.control-commands",
+          "title": "HUD control and layout commands",
+          "type": "command",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Inspects or changes HUD state, placement, module availability, and shared-console integration from the command line.",
+          "code": [
+            "wayfire-hudctl status\nwayfire-hudctl cycle\nwayfire-hudctl desktop\nwayfire-hudctl top\nwayfire-hudctl interactive\nwayfire-hudctl invisible\nwayfire-hudctl reload\nwayfire-hudctl quit",
+            "./run.sh layout\n./run.sh layout left\n./run.sh layout right\n./run.sh layout fullscreen\n./run.sh module-check\n./run.sh console-status"
+          ],
+          "tags": [
+            "wayfire-hudctl",
+            "status",
+            "cycle",
+            "layout",
+            "left",
+            "right",
+            "fullscreen",
+            "reload",
+            "module check",
+            "console status"
+          ]
+        },
+        {
+          "id": "hud.configuration",
+          "title": "User configuration and optional tools",
+          "type": "requirements",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Keeps active authority in the user’s XDG tree and seeds optional modules only when their commands are present.",
+          "signature": "${XDG_CONFIG_HOME:-$HOME/.config}/substr8-hud/",
+          "details": [
+            {
+              "label": "config.ini",
+              "value": "Placement plus independent side and fullscreen module arrangements."
+            },
+            {
+              "label": "modules.d/",
+              "value": "Module identity, command, lifecycle, requirements, default panel, and bank order."
+            },
+            {
+              "label": "tty.conf",
+              "value": "Explicit real-TTY source override."
+            },
+            {
+              "label": "btop/",
+              "value": "Compact btop environment and profile data."
+            },
+            {
+              "label": "Preservation",
+              "value": "Existing files and edits are preserved; deliberately removed seeded modules or settings are not silently recreated."
+            },
+            {
+              "label": "External tools",
+              "value": "The HUD detects installed tools without invoking a package manager or starting unrelated daemons."
+            }
+          ],
+          "notes": [
+            "OpenSnitch integration is read-only: the HUD does not invoke sudo, start the daemon, or create firewall rules."
+          ],
+          "tags": [
+            "xdg config",
+            "config.ini",
+            "modules.d",
+            "tty.conf",
+            "optional tools",
+            "opensnitch",
+            "preserve edits"
+          ]
+        },
+        {
+          "id": "hud.installation-runtime",
+          "title": "Installation, inspection, and runtime paths",
+          "type": "reference",
+          "module": "SUBSTR8 HUD",
+          "status": "available",
+          "summary": "Uses the repository-root dispatcher for supported operations and stable compatibility paths for control and diagnostics.",
+          "code": [
+            "./run.sh update --no-run\n./run.sh install\n./run.sh uninstall\n./run.sh module-check"
+          ],
+          "table": {
+            "headers": [
+              "Purpose",
+              "Path"
+            ],
+            "rows": [
+              [
+                "Control socket",
+                "$XDG_RUNTIME_DIR/wayfire-hud.sock"
+              ],
+              [
+                "Diagnostics",
+                "~/.local/state/wayfire-hud.log"
+              ],
+              [
+                "User configuration",
+                "${XDG_CONFIG_HOME:-$HOME/.config}/substr8-hud/"
+              ],
+              [
+                "Installed immutable defaults",
+                "/usr/local/share/substr8-hud/ (typical Meson prefix)"
+              ]
+            ]
+          },
+          "details": [
+            {
+              "label": "Run as",
+              "value": "The desktop user."
+            },
+            {
+              "label": "Elevation",
+              "value": "Requested only for system-owned installation paths, then control returns to user configuration and user services."
+            },
+            {
+              "label": "Core requirements",
+              "value": "Wayfire 0.10.x, GTK4, GTK4 Layer Shell, VTE4, tmux, Meson, Ninja, pkg-config, and systemd interfaces."
+            }
+          ],
+          "tags": [
+            "install",
+            "uninstall",
+            "module check",
+            "run.sh",
+            "socket",
+            "log",
+            "runtime path",
+            "dependencies"
+          ]
+        }
+      ]
+    }
+  ]
+}</script>
+<script>
+(() => {
+  const data = JSON.parse(document.getElementById('fireshit-reference-data').textContent);
+  const search = document.getElementById('search');
+  const reference = document.getElementById('reference');
+  const sidebar = document.getElementById('sidebar');
+  const resultCount = document.getElementById('resultCount');
+  const emptyState = document.getElementById('emptyState');
+  const moduleGrid = document.getElementById('moduleGrid');
+  const quickGrid = document.getElementById('quickGrid');
+  const filters = document.getElementById('filters');
+  let activeStatus = 'all';
+
+  const escapeHtml = (value = '') => String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+
+  const idToDom = (id) => id.replaceAll('.', '-');
+  const statusLabel = (status) => data.statusLabels[status] || status;
+
+  function renderModules() {
+    moduleGrid.innerHTML = data.modules.map(module => `
+      <article class="module-card">
+        <div class="module-short">${escapeHtml(module.short)}</div>
+        <h3>${escapeHtml(module.name)}</h3>
+        <p>${escapeHtml(module.description)}</p>
+      </article>`).join('');
+  }
+
+  function renderQuickStart() {
+    quickGrid.innerHTML = data.quickStart.map(item => `
+      <div class="quick-item">
+        <div class="quick-label">${escapeHtml(item.label)}</div>
+        <code>${escapeHtml(item.code)}</code>
+        <button class="copy-button" type="button" data-copy="${escapeHtml(item.code)}">Copy</button>
+      </div>`).join('');
+  }
+
+  function renderFilters() {
+    const options = [['all','All'], ...Object.entries(data.statusLabels)];
+    filters.innerHTML = options.map(([value,label]) => `
+      <button class="filter-button ${value === 'all' ? 'active' : ''}" type="button" data-status="${escapeHtml(value)}">${escapeHtml(label)}</button>`).join('');
+  }
+
+  function renderTable(table) {
+    if (!table) return '';
+    return `<div class="table-wrap"><table><thead><tr>${table.headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${table.rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  }
+
+  function renderCodes(codes = []) {
+    return codes.map(code => `<div class="code-block"><pre><code>${escapeHtml(code)}</code></pre><button class="copy-button" type="button" data-copy="${escapeHtml(code)}">Copy</button></div>`).join('');
+  }
+
+  function renderDetails(entry) {
+    const details = entry.details?.length ? `<div class="detail-grid">${entry.details.map(item => `<div class="detail-item"><div class="detail-label">${escapeHtml(item.label)}</div><div class="detail-value">${escapeHtml(item.value)}</div></div>`).join('')}</div>` : '';
+    const notes = entry.notes?.length ? `<ul class="note-list">${entry.notes.map(note => `<li>${escapeHtml(note)}</li>`).join('')}</ul>` : '';
+    return `${renderTable(entry.table)}${renderCodes(entry.code)}${details}${notes}`;
+  }
+
+  function entrySearchText(section, entry) {
+    return [
+      section.label,
+      section.description,
+      entry.id,
+      entry.title,
+      entry.type,
+      entry.module,
+      statusLabel(entry.status),
+      entry.summary,
+      entry.signature,
+      ...(entry.tags || []),
+      ...(entry.details || []).flatMap(item => [item.label,item.value]),
+      ...(entry.notes || []),
+      ...(entry.code || []),
+      ...(entry.table?.headers || []),
+      ...((entry.table?.rows || []).flat())
+    ].filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function renderEntry(section, entry) {
+    const domId = idToDom(entry.id);
+    const detailContent = renderDetails(entry);
+    const searchable = escapeHtml(entrySearchText(section, entry));
+    return `<article class="reference-entry" id="${domId}" data-entry-id="${escapeHtml(entry.id)}" data-status="${escapeHtml(entry.status)}" data-search="${searchable}">
+      <div class="entry-main">
+        <div class="entry-heading">
+          <div class="entry-meta">
+            <span class="ref-key">${escapeHtml(entry.id)}</span>
+            <span class="type-chip">${escapeHtml(entry.type)}</span>
+            <button class="anchor-button" type="button" data-anchor="${domId}" aria-label="Copy link to ${escapeHtml(entry.title)}">#</button>
+          </div>
+          <h3 class="entry-title">${escapeHtml(entry.title)}</h3>
+          <p class="entry-summary">${escapeHtml(entry.summary)}</p>
+        </div>
+        <div class="entry-side">
+          <span class="module-badge">${escapeHtml(entry.module)}</span>
+          <span class="status ${escapeHtml(entry.status)}">${escapeHtml(statusLabel(entry.status))}</span>
+        </div>
+      </div>
+      ${entry.signature ? `<div class="signature">${escapeHtml(entry.signature)}</div>` : ''}
+      ${detailContent ? `<details class="inline-details"><summary>Behavior, controls, and notes</summary><div class="detail-body">${detailContent}</div></details>` : ''}
+    </article>`;
+  }
+
+  function renderReference() {
+    reference.innerHTML = data.sections.map((section, index) => `
+      <section class="reference-section" id="section-${escapeHtml(section.id)}" data-section="${escapeHtml(section.id)}">
+        <div class="section-head">
+          <div><div class="eyebrow">${String(index + 1).padStart(2,'0')} / reference group</div><h2>${escapeHtml(section.label)}</h2><p>${escapeHtml(section.description)}</p></div>
+          <div class="section-index">${section.entries.length} entries</div>
+        </div>
+        <div class="entries">${section.entries.map(entry => renderEntry(section, entry)).join('')}</div>
+      </section>`).join('');
+  }
+
+  function renderSidebar() {
+    const overview = `<div class="nav-section" data-nav-section="overview"><a href="#overview"><span>Overview</span><span class="nav-count">start</span></a></div>`;
+    const sections = data.sections.map(section => `
+      <div class="nav-section" data-nav-section="${escapeHtml(section.id)}">
+        <a href="#section-${escapeHtml(section.id)}"><span>${escapeHtml(section.label)}</span><span class="nav-count">${section.entries.length}</span></a>
+        ${section.entries.map(entry => `<a class="nav-entry" data-nav-entry="${escapeHtml(entry.id)}" href="#${idToDom(entry.id)}">${escapeHtml(entry.title)}</a>`).join('')}
+      </div>`).join('');
+    sidebar.insertAdjacentHTML('beforeend', overview + sections);
+  }
+
+  function applyFilters() {
+    const query = search.value.trim().toLowerCase();
+    let visibleEntries = 0;
+    document.querySelectorAll('.reference-section').forEach(section => {
+      let sectionVisible = 0;
+      section.querySelectorAll('.reference-entry').forEach(entry => {
+        const statusMatch = activeStatus === 'all' || entry.dataset.status === activeStatus;
+        const queryMatch = !query || entry.dataset.search.includes(query);
+        const visible = statusMatch && queryMatch;
+        entry.classList.toggle('hidden-by-search', !visible);
+        const nav = document.querySelector(`[data-nav-entry="${CSS.escape(entry.dataset.entryId)}"]`);
+        if (nav) nav.hidden = !visible;
+        if (visible) {
+          visibleEntries++;
+          sectionVisible++;
+          if (query && entry.querySelector('.inline-details')) entry.querySelector('.inline-details').open = true;
+        }
+      });
+      section.classList.toggle('hidden-by-search', sectionVisible === 0);
+      const navSection = document.querySelector(`[data-nav-section="${CSS.escape(section.dataset.section)}"]`);
+      if (navSection) navSection.hidden = sectionVisible === 0;
+    });
+    resultCount.textContent = `${visibleEntries} ${visibleEntries === 1 ? 'entry' : 'entries'}`;
+    emptyState.style.display = visibleEntries ? 'none' : 'block';
+  }
+
+  async function copyText(text, button) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    const old = button.textContent;
+    button.textContent = 'Copied';
+    button.classList.add('copied');
+    setTimeout(() => { button.textContent = old; button.classList.remove('copied'); }, 1200);
+  }
+
+  function wireEvents() {
+    search.addEventListener('input', applyFilters);
+    filters.addEventListener('click', event => {
+      const button = event.target.closest('[data-status]');
+      if (!button) return;
+      activeStatus = button.dataset.status;
+      filters.querySelectorAll('.filter-button').forEach(item => item.classList.toggle('active', item === button));
+      applyFilters();
+    });
+    document.addEventListener('click', event => {
+      const copy = event.target.closest('[data-copy]');
+      if (copy) copyText(copy.dataset.copy, copy);
+      const anchor = event.target.closest('[data-anchor]');
+      if (anchor) {
+        const hash = '#' + anchor.dataset.anchor;
+        history.replaceState(null, '', hash);
+        copyText(location.href, anchor);
+      }
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === '/' && document.activeElement !== search && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
+        event.preventDefault();
+        search.focus();
+      }
+      if (event.key === 'Escape' && document.activeElement === search) {
+        search.value = '';
+        search.blur();
+        applyFilters();
+      }
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(item => item.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      sidebar.querySelectorAll('a.active').forEach(link => link.classList.remove('active'));
+      const sectionLink = visible.target.classList.contains('reference-section')
+        ? sidebar.querySelector(`a[href="#${visible.target.id}"]`)
+        : sidebar.querySelector(`a[href="#${visible.target.id}"]`);
+      if (sectionLink) sectionLink.classList.add('active');
+    }, { rootMargin:'-22% 0px -68% 0px', threshold:[0,.1,.5] });
+    document.querySelectorAll('.reference-section,.reference-entry').forEach(item => observer.observe(item));
+  }
+
+  renderModules();
+  renderQuickStart();
+  renderFilters();
+  renderReference();
+  renderSidebar();
+  wireEvents();
+  applyFilters();
+
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target?.classList.contains('reference-entry')) target.querySelector('.inline-details')?.setAttribute('open','');
+  }
+})();
+</script>
+</body>
+</html>
