@@ -1,3 +1,0 @@
-# Append "frametap" to the existing [core] plugins value. Do not replace the list.
-[core]
-# plugins = ... frametap-wayfire

@@ -1,5 +1,0 @@
-option('plugin', type: 'feature', value: 'enabled', description: 'Build the required Wayfire compositor plugin')
-option('worker', type: 'boolean', value: true, description: 'Build the canonical frametap executable')
-option('tests', type: 'feature', value: 'disabled', description: 'Build developer tests only when explicitly requested')
-option('plugin_dir', type: 'string', value: '', description: 'Override Wayfire plugin installation directory')
-option('metadata_dir', type: 'string', value: '', description: 'Override Wayfire metadata installation directory')

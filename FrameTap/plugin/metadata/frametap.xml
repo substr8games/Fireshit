@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<wayfire>
-  <plugin name="frametap-wayfire">
-    <_short>FrameTap</_short>
-    <_long>Application-targeted capture authority for the FrameTap worker.</_long>
-    <category>Utility</category>
-  </plugin>
-</wayfire>
