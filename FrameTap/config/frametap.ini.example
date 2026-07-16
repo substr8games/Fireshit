@@ -1,0 +1,18 @@
+# FrameTap user configuration
+# Install with: frametap --write-default-config
+# CLI options override these values.
+# Screenshot fields are reserved for the screenshot pass.
+
+[paths]
+recordings = ~/Captures/recordings
+screenshots = ~/Captures/screens
+
+[naming]
+recording = [frametap]-{timestamp}.mkv
+screenshot = [frametap]-{timestamp}.png
+
+[defaults]
+record = on
+audio = on
+audio_mode = automatic
+viewport = off

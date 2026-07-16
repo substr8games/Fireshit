@@ -1,0 +1,15 @@
+{
+  "suite": "Fireshit",
+  "suite_version": "1.1",
+  "release_type": "source",
+  "license": "Fireshit Capture Immunity License 0.1",
+  "license_identifier": "LicenseRef-FCIL-0.1",
+  "steward": "Giz@SUBSTR8Games",
+  "audit_date": "2026-07-15",
+  "audit_status": "passed",
+  "historical_v1_0_license": "MIT (unchanged historical grant)",
+  "prebuilt_binaries_included": false,
+  "file_count_excluding_manifests": 257,
+  "total_bytes_excluding_manifests": 5050498,
+  "canonical_license_sha256": "6ec8a926254b77f29246191643ccbeaee477db41cbfee06313cdc71919186714"
+}
