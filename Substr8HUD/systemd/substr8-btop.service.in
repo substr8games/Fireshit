@@ -1,0 +1,15 @@
+[Unit]
+Description=SUBSTR8 HUD compact rotating btop monitor
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=@libexecdir@/substr8-hud/substr8-btop-service
+Restart=on-failure
+RestartPreventExitStatus=127
+RestartSec=2
+TimeoutStopSec=4
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

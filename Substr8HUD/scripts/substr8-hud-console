@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+ACTION="${1:-attach}"
+SOCKET_NAME="substr8-hud"
+SESSION_NAME="console"
+
+find_config() {
+  if [ -n "${SUBSTR8_HUD_TMUX_CONFIG:-}" ] &&
+     [ -f "$SUBSTR8_HUD_TMUX_CONFIG" ]; then
+    printf '%s\n' "$SUBSTR8_HUD_TMUX_CONFIG"
+    return 0
+  fi
+
+  for path in \
+    /usr/local/share/substr8-hud/substr8-hud-console.tmux.conf \
+    /usr/share/substr8-hud/substr8-hud-console.tmux.conf
+  do
+    if [ -f "$path" ]; then
+      printf '%s\n' "$path"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+prepare_identity() {
+  user="${SUBSTR8_HUD_CONSOLE_USER:-$(id -un)}"
+  passwd_line="$(getent passwd "$user")" || {
+    echo "SUBSTR8 HUD console: unknown user $user" >&2
+    return 1
+  }
+
+  home="$(printf '%s' "$passwd_line" | cut -d: -f6)"
+  shell="$(printf '%s' "$passwd_line" | cut -d: -f7)"
+
+  if [ -z "$home" ] || [ ! -d "$home" ]; then
+    echo "SUBSTR8 HUD console: invalid home for $user" >&2
+    return 1
+  fi
+  if [ -z "$shell" ] || [ ! -x "$shell" ]; then
+    shell=/usr/bin/bash
+  fi
+
+  export HOME="$home"
+  export USER="$user"
+  export LOGNAME="$user"
+  export SHELL="$shell"
+  export TERM="${TERM:-linux}"
+  cd "$HOME" || return 1
+}
+
+attach_console() {
+  command -v tmux >/dev/null 2>&1 || {
+    echo "SUBSTR8 HUD console: tmux is unavailable" >&2
+    exit 127
+  }
+
+  config="$(find_config)" || {
+    echo "SUBSTR8 HUD console: tmux configuration is unavailable" >&2
+    exit 2
+  }
+
+  prepare_identity || exit $?
+  shell_command="exec \"$SHELL\" -l"
+  exec tmux \
+    -L "$SOCKET_NAME" \
+    -f "$config" \
+    new-session -A -s "$SESSION_NAME" -n SUBSTR8 "$shell_command"
+}
+
+system_attach_console() {
+  target_user="${SUBSTR8_HUD_CONSOLE_USER:-}"
+  if [ -z "$target_user" ]; then
+    echo "SUBSTR8 HUD console: SUBSTR8_HUD_CONSOLE_USER is not configured" >&2
+    exit 2
+  fi
+  if ! id "$target_user" >/dev/null 2>&1; then
+    echo "SUBSTR8 HUD console: unknown user $target_user" >&2
+    exit 2
+  fi
+  if [ "$(id -u)" -eq 0 ] && [ "$target_user" != root ]; then
+    exec runuser -u "$target_user" -- env \
+      SUBSTR8_HUD_CONSOLE_USER="$target_user" \
+      TERM="${TERM:-linux}" \
+      "$0" attach
+  fi
+  attach_console
+}
+
+case "$ACTION" in
+  attach) attach_console ;;
+  system-attach) system_attach_console ;;
+  *)
+    echo "SUBSTR8 HUD console: unsupported internal action: $ACTION" >&2
+    exit 2
+    ;;
+esac

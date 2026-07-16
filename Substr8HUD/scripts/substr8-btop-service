@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+
+SOCKET="substr8-btop"
+SESSION="monitor"
+TARGET="$SESSION:0.0"
+SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" || exit 1
+PREFIX="$(cd "$SELF_DIR/../.." && pwd -P)" || exit 1
+SHARE_DIR="$PREFIX/share/substr8-hud/btop"
+RUNNER="$SELF_DIR/substr8-btop-runner"
+CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+SETTINGS_FILE="$CONFIG_HOME/substr8-hud/btop/environment"
+STATE_DIR="$STATE_HOME/substr8-hud/btop"
+RUNTIME_CONFIG="$STATE_DIR/btop.conf"
+VIEW_FILE="$STATE_DIR/current-view"
+PAUSE_FILE="$STATE_DIR/cycling-paused"
+CONFIG_TEMPLATE="$SHARE_DIR/btop.conf"
+TMUX_CONFIG="$SHARE_DIR/tmux.conf"
+TMUX_BIN="$(command -v tmux)"
+BTOP_BIN="$(command -v btop)"
+BTOP_COLUMNS=82
+BTOP_ROWS=16
+BTOP_CYCLE_SECONDS=10
+CURRENT_VIEW="cpu-proc"
+
+log() {
+  echo "substr8-btop: $1"
+}
+
+valid_integer() {
+  case "$1" in
+    ''|*[!0-9]*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+cleanup() {
+  if [ -n "$TMUX_BIN" ]; then
+    "$TMUX_BIN" -L "$SOCKET" kill-server >/dev/null 2>&1 || true
+  fi
+  rm -f "$VIEW_FILE"
+}
+
+send_literal() {
+  "$TMUX_BIN" -L "$SOCKET" send-keys -t "$TARGET" -l "$1" || return 1
+  sleep 0.15
+}
+
+show_mem_net() {
+  send_literal 4 || return 1
+  send_literal 2 || return 1
+  send_literal 1 || return 1
+  send_literal 3 || return 1
+  CURRENT_VIEW="mem-net"
+  echo "$CURRENT_VIEW" > "$VIEW_FILE"
+}
+
+show_cpu_proc() {
+  send_literal 3 || return 1
+  send_literal 1 || return 1
+  send_literal 2 || return 1
+  send_literal 4 || return 1
+  CURRENT_VIEW="cpu-proc"
+  echo "$CURRENT_VIEW" > "$VIEW_FILE"
+}
+
+trap 'cleanup; exit 0' TERM INT HUP
+trap cleanup EXIT
+
+if [ -r "$SETTINGS_FILE" ]; then
+  # User-owned settings file containing simple variable assignments.
+  . "$SETTINGS_FILE"
+fi
+
+[ -n "$TMUX_BIN" ] || { log "tmux is unavailable"; exit 127; }
+[ -n "$BTOP_BIN" ] || { log "btop is unavailable"; exit 127; }
+[ -r "$CONFIG_TEMPLATE" ] || { log "compact config template is unavailable"; exit 1; }
+[ -r "$TMUX_CONFIG" ] || { log "tmux configuration is unavailable"; exit 1; }
+[ -x "$RUNNER" ] || { log "btop runner is unavailable"; exit 1; }
+
+valid_integer "$BTOP_COLUMNS" || { log "BTOP_COLUMNS must be an integer"; exit 2; }
+valid_integer "$BTOP_ROWS" || { log "BTOP_ROWS must be an integer"; exit 2; }
+valid_integer "$BTOP_CYCLE_SECONDS" || { log "BTOP_CYCLE_SECONDS must be an integer"; exit 2; }
+
+[ "$BTOP_COLUMNS" -ge 40 ] || { log "BTOP_COLUMNS is too small"; exit 2; }
+[ "$BTOP_ROWS" -ge 10 ] || { log "BTOP_ROWS is too small"; exit 2; }
+[ "$BTOP_CYCLE_SECONDS" -ge 2 ] || { log "BTOP_CYCLE_SECONDS must be at least 2"; exit 2; }
+
+mkdir -p "$STATE_DIR" || exit 1
+install -m 600 "$CONFIG_TEMPLATE" "$RUNTIME_CONFIG" || exit 1
+BTOP_VERSION="$("$BTOP_BIN" --version 2>/dev/null | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)"
+if [ -n "$BTOP_VERSION" ]; then
+  sed -i "1s/v.RUNTIME/v.${BTOP_VERSION}/" "$RUNTIME_CONFIG" || exit 1
+fi
+rm -f "$PAUSE_FILE"
+
+"$TMUX_BIN" -L "$SOCKET" kill-server >/dev/null 2>&1 || true
+printf -v runner_command '%q' "$RUNNER"
+
+"$TMUX_BIN" -L "$SOCKET" -f "$TMUX_CONFIG" new-session \
+  -d \
+  -s "$SESSION" \
+  -x "$BTOP_COLUMNS" \
+  -y "$BTOP_ROWS" \
+  "$runner_command" || exit 1
+
+"$TMUX_BIN" -L "$SOCKET" set-option -t "$SESSION" remain-on-exit off >/dev/null
+"$TMUX_BIN" -L "$SOCKET" set-window-option -t "$SESSION:0" window-size manual >/dev/null
+"$TMUX_BIN" -L "$SOCKET" resize-window -t "$SESSION:0" -x "$BTOP_COLUMNS" -y "$BTOP_ROWS" >/dev/null
+
+echo "$CURRENT_VIEW" > "$VIEW_FILE"
+log "running at ${BTOP_COLUMNS}x${BTOP_ROWS}; cycling every ${BTOP_CYCLE_SECONDS}s"
+
+sleep 1
+while "$TMUX_BIN" -L "$SOCKET" has-session -t "=$SESSION" 2>/dev/null; do
+  sleep "$BTOP_CYCLE_SECONDS"
+  "$TMUX_BIN" -L "$SOCKET" has-session -t "=$SESSION" 2>/dev/null || break
+  [ -e "$PAUSE_FILE" ] && continue
+
+  if [ "$CURRENT_VIEW" = "cpu-proc" ]; then
+    show_mem_net || exit 1
+  else
+    show_cpu_proc || exit 1
+  fi
+done
+
+log "btop session exited"
+exit 1

@@ -1,0 +1,6 @@
+# Fixed canvas for the SUBSTR8 HUD compact telemetry bank.
+BTOP_COLUMNS=82
+BTOP_ROWS=16
+
+# Seconds per CPU/Processes or Memory/Network view.
+BTOP_CYCLE_SECONDS=10

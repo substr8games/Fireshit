@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<wayfire>
+  <plugin name="wayfire-hud">
+    <_short>SUBSTR8 HUD</_short>
+    <_long>Configurable left, right, or fullscreen modular HUD for Wayfire with persistent module arrangement, a read-only real TTY mirror, and a shared console.</_long>
+    <category>Utility</category>
+
+    <option name="toggle" type="activator">
+      <_short>Cycle HUD State</_short>
+      <_long>Cycle desktop, top, interactive, invisible, and back to desktop.</_long>
+      <default>&lt;super&gt; KEY_HOME</default>
+    </option>
+
+    <option name="enabled" type="bool">
+      <_short>Enabled</_short>
+      <_long>Start or stop the HUD immediately without unloading Wayfire.</_long>
+      <default>true</default>
+    </option>
+
+    <option name="autostart" type="bool">
+      <_short>Start Automatically</_short>
+      <_long>Launch the HUD automatically when the Wayfire plugin initializes. Disabling this does not override the live Enabled switch.</_long>
+      <default>true</default>
+    </option>
+
+    <option name="width_percent" type="int">
+      <_short>Screen Width Percent</_short>
+      <_long>Logical width of left/right HUD placement. Fullscreen always uses the complete selected output. Applied immediately.</_long>
+      <default>50</default>
+      <min>25</min>
+      <max>100</max>
+    </option>
+
+    <option name="opacity" type="double">
+      <_short>Panel Opacity</_short>
+      <_long>Alpha opacity for terminal panel backgrounds. Applied immediately. In INTERACTIVE, use the scroll wheel while the pane selector owns focus to change this in five-percent steps.</_long>
+      <default>0.58</default>
+      <min>0.15</min>
+      <max>1.00</max>
+    </option>
+
+    <option name="module_directory" type="string">
+      <_short>Module Directory Override</_short>
+      <_long>Optional explicit module directory. Leave blank to use the XDG user configuration at ~/.config/substr8-hud/modules.d. Changing it restarts the HUD.</_long>
+      <default></default>
+    </option>
+
+    <option name="initial_state" type="string">
+      <_short>Initial State</_short>
+      <_long>desktop, top, interactive, or invisible. Changing it restarts the HUD.</_long>
+      <default>desktop</default>
+    </option>
+  </plugin>
+</wayfire>

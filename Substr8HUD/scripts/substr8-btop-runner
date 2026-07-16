@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" || exit 1
+STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+CONFIG_PATH="$STATE_HOME/substr8-hud/btop/btop.conf"
+BTOP_BIN="$(command -v btop)"
+
+if [ -z "$BTOP_BIN" ]; then
+  echo "btop is unavailable." >&2
+  exit 127
+fi
+
+exec "$BTOP_BIN" \
+  --config "$CONFIG_PATH" \
+  --no-tty
