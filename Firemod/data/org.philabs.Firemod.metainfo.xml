@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.philabs.Firemod</id>
+  <name>Firemod</name>
+  <summary>Fireshit Core module shell and global Wayfire utility surface</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-FCIL-0.1</project_license>
+  <description>
+    <p>Firemod is Fireshit Core: a native GTK4 settings inventory, dedicated Fireshit control surface, capability registry, and global utility shell for Wayfire, styled through the same visual system as the Fireshit Public Reference Matrix.</p>
+    <p>Its SUPER+middle-click menu projects seven canonical capabilities through a compact flat-top hex grid, performs native screenshots and screen snips, routes output, region, and application recording through FrameTap, and includes a native color picker with HEX, RGB, HSL, and OKLCH output.</p>
+    <p>Users may deliberately add applications and executable scripts with custom color, hover text, and optional PNG artwork. External configuration discovery remains read-only until an application-specific adapter earns write authority.</p>
+  </description>
+  <launchable type="desktop-id">org.philabs.Firemod.desktop</launchable>
+  <provides>
+    <binary>firemod</binary>
+    <binary>firemodctl</binary>
+  </provides>
+</component>

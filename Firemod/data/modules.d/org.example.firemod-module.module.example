@@ -1,0 +1,7 @@
+[module]
+id=org.example.FiremodModule
+name=Example External Module
+summary=Reference manifest for a compatible external Firemod module.
+icon=application-x-addon-symbolic
+executable=example-tool
+settings-command=example-tool --settings
